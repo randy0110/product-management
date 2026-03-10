@@ -14,6 +14,7 @@ export const productKeys = {
   lists: () => [...productKeys.all, 'list'] as const,
   list: (filters: ProductFilters) => [...productKeys.lists(), filters] as const,
   detail: (id: number) => [...productKeys.all, 'detail', id] as const,
+  audits: (id: number) => [...productKeys.all, 'audits', id] as const,
 };
 
 // ─── Queries ─────────────────────────────────────────────────────────────────
@@ -30,6 +31,14 @@ export function useProduct(id: number) {
   return useQuery({
     queryKey: productKeys.detail(id),
     queryFn: () => productsApi.get(id),
+    enabled: !!id,
+  });
+}
+
+export function useProductAudits(id: number | undefined) {
+  return useQuery({
+    queryKey: productKeys.audits(id!),
+    queryFn: () => productsApi.audits(id!),
     enabled: !!id,
   });
 }

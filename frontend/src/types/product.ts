@@ -28,6 +28,14 @@ export interface PaginationMeta {
   per_page: number;
 }
 
+export interface AuditRecord {
+  id: number;
+  action: 'create' | 'update' | 'destroy';
+  audited_changes: Record<string, [unknown, unknown] | unknown>;
+  version: number;
+  created_at: string;
+}
+
 export interface ProductListResponse {
   data: Product[];
   meta: PaginationMeta;

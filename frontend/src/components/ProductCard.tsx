@@ -1,13 +1,14 @@
-import { Edit2, Trash2, Package } from 'lucide-react';
+import { Edit2, Trash2, Package, History } from 'lucide-react';
 import type { Product } from '../types/product';
 
 interface ProductCardProps {
   product: Product;
   onEdit: (product: Product) => void;
   onDelete: (product: Product) => void;
+  onHistory: (product: Product) => void;
 }
 
-export function ProductCard({ product, onEdit, onDelete }: ProductCardProps) {
+export function ProductCard({ product, onEdit, onDelete, onHistory }: ProductCardProps) {
   const price = parseFloat(product.price).toFixed(2);
 
   return (
@@ -62,6 +63,13 @@ export function ProductCard({ product, onEdit, onDelete }: ProductCardProps) {
 
         {/* Actions */}
         <div className="flex gap-2">
+          <button
+            onClick={() => onHistory(product)}
+            className="flex items-center justify-center gap-1.5 py-2 px-3 text-sm font-medium text-gray-600 bg-gray-50 hover:bg-gray-100 rounded-lg transition-colors"
+            title="Change history"
+          >
+            <History className="h-3.5 w-3.5" />
+          </button>
           <button
             onClick={() => onEdit(product)}
             className="flex-1 flex items-center justify-center gap-1.5 py-2 px-3 text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 rounded-lg transition-colors"

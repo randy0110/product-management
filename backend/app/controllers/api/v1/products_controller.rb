@@ -1,7 +1,7 @@
 module Api
   module V1
     class ProductsController < ApplicationController
-      before_action :set_product, only: %i[show update destroy]
+      before_action :set_product, only: %i[show update destroy audits]
 
       # GET /api/v1/products
       def index
@@ -60,6 +60,20 @@ module Api
 
         render json: { message: "Producto '#{result.product_name}' eliminado correctamente" },
                status: :ok
+      end
+
+      # GET /api/v1/products/:id/audits
+      def audits
+        records = @product.audits.order(created_at: :desc).map do |audit|
+          {
+            id:              audit.id,
+            action:          audit.action,
+            audited_changes: audit.audited_changes,
+            version:         audit.version,
+            created_at:      audit.created_at
+          }
+        end
+        render json: { data: records }, status: :ok
       end
 
       private

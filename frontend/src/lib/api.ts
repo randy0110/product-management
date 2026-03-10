@@ -5,6 +5,7 @@ import type {
   ProductFilters,
   ProductListResponse,
   ProductResponse,
+  AuditRecord,
 } from '../types/product';
 
 const api = axios.create({
@@ -63,6 +64,14 @@ export const productsApi = {
    */
   delete: async (id: number): Promise<void> => {
     await api.delete(`/products/${id}`);
+  },
+
+  /**
+   * Get audit history for a product.
+   */
+  audits: async (id: number): Promise<AuditRecord[]> => {
+    const { data } = await api.get<{ data: AuditRecord[] }>(`/products/${id}/audits`);
+    return data.data;
   },
 };
 

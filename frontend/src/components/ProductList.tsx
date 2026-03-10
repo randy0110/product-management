@@ -14,6 +14,7 @@ import { ProductCard } from './ProductCard';
 import { ProductSearchBar } from './ProductSearchBar';
 import { ProductForm } from './ProductForm';
 import { DeleteConfirmModal } from './DeleteConfirmModal';
+import { ProductHistoryModal } from './ProductHistoryModal';
 import { Pagination } from './Pagination';
 import { LoadingSpinner } from './LoadingSpinner';
 
@@ -29,6 +30,7 @@ export function ProductList() {
   const [showForm, setShowForm] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | undefined>();
   const [deletingProduct, setDeletingProduct] = useState<Product | undefined>();
+  const [historyProduct, setHistoryProduct] = useState<Product | undefined>();
 
   // ── Data ───────────────────────────────────────────────────────────────────
   const { data, isLoading, isFetching, isError, error } = useProducts({
@@ -177,6 +179,7 @@ export function ProductList() {
                     product={product}
                     onEdit={handleEdit}
                     onDelete={handleDeleteRequest}
+                    onHistory={setHistoryProduct}
                   />
                 ))}
               </div>
@@ -214,6 +217,13 @@ export function ProductList() {
           isDeleting={deleteMutation.isPending}
           onConfirm={handleDeleteConfirm}
           onCancel={() => setDeletingProduct(undefined)}
+        />
+      )}
+
+      {historyProduct && (
+        <ProductHistoryModal
+          product={historyProduct}
+          onClose={() => setHistoryProduct(undefined)}
         />
       )}
     </div>
