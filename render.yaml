@@ -1,0 +1,34 @@
+databases:
+  - name: product-management-db
+    plan: free
+    databaseName: product_management
+    user: rails
+
+services:
+  # ── Backend Rails API ────────────────────────────────────────────────────────
+  - type: web
+    name: product-management-api
+    runtime: docker
+    rootDir: backend
+    plan: free
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: SECRET_KEY_BASE
+        generateValue: true  # ← Render genera un valor seguro automáticamente
+      - key: FRONTEND_URL
+        sync: false          # ← URL del frontend una vez desplegado
+      - key: DATABASE_URL
+        fromDatabase:
+          name: product-management-db
+          property: connectionString
+
+  # ── Frontend React (sitio estático) ─────────────────────────────────────────
+  - type: web
+    name: product-management-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_URL
+        sync: false          # ← URL del backend una vez desplegado
