@@ -31,7 +31,7 @@ export function ProductList() {
   const [deletingProduct, setDeletingProduct] = useState<Product | undefined>();
 
   // ── Data ───────────────────────────────────────────────────────────────────
-  const { data, isLoading, isError, error } = useProducts({
+  const { data, isLoading, isFetching, isError, error } = useProducts({
     search: search || undefined,
     active: activeFilter,
     page,
@@ -169,15 +169,24 @@ export function ProductList() {
         {/* Product Grid */}
         {!isLoading && !isError && data && data.data.length > 0 && (
           <>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-              {data.data.map((product) => (
-                <ProductCard
-                  key={product.id}
-                  product={product}
-                  onEdit={handleEdit}
-                  onDelete={handleDeleteRequest}
-                />
-              ))}
+            <div className="relative">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {data.data.map((product) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    onEdit={handleEdit}
+                    onDelete={handleDeleteRequest}
+                  />
+                ))}
+              </div>
+
+              {/* Pagination fetching overlay */}
+              {isFetching && (
+                <div className="absolute inset-0 bg-white/60 backdrop-blur-[1px] rounded-xl flex items-center justify-center">
+                  <LoadingSpinner size="lg" />
+                </div>
+              )}
             </div>
 
             {/* Pagination */}
