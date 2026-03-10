@@ -126,7 +126,7 @@ export function ProductForm({ product, isSubmitting, onSubmit, onCancel }: Produ
             <div className="grid grid-cols-2 gap-3">
               <Field label="Price ($) *" error={errors.price?.message}>
                 <input
-                  {...register('price')}
+                  {...register('price', { valueAsNumber: true })}
                   type="number"
                   step="0.01"
                   min="0.01"
@@ -136,7 +136,7 @@ export function ProductForm({ product, isSubmitting, onSubmit, onCancel }: Produ
               </Field>
               <Field label="Stock *" error={errors.stock?.message}>
                 <input
-                  {...register('stock')}
+                  {...register('stock', { valueAsNumber: true })}
                   type="number"
                   step="1"
                   min="0"
