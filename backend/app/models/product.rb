@@ -1,4 +1,6 @@
 class Product < ApplicationRecord
+  include Discard::Model
+
   audited
 
   # ─── Validations ───────────────────────────────────────────────────────────

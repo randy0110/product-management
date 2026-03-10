@@ -5,7 +5,7 @@ module Api
 
       # GET /api/v1/products
       def index
-        products = Product
+        products = Product.kept
           .search_by_name(params[:search])
           .filter_by_status(params[:active])
           .order(created_at: :desc)
@@ -65,7 +65,7 @@ module Api
       private
 
       def set_product
-        @product = Product.find(params[:id])
+        @product = Product.kept.find(params[:id])
       end
 
       def product_params

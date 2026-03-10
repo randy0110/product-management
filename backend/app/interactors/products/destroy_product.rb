@@ -9,9 +9,9 @@ module Products
       context.product_name = product.name
 
       begin
-        product.destroy!
-      rescue ActiveRecord::RecordNotDestroyed => e
-        context.fail!(errors: e.record.errors.full_messages)
+        product.discard!
+      rescue Discard::NotDiscarded => e
+        context.fail!(errors: [e.message])
       end
     end
   end
