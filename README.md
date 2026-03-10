@@ -23,9 +23,11 @@ Aplicación full stack de gestión de productos construida con **Ruby on Rails**
 - **Búsqueda** — Búsqueda en tiempo real por nombre (ILIKE, sin distinción de mayúsculas)
 - **Filtro** — Filtrar por estado: Todos / Activos / Inactivos
 - **Validaciones** — En frontend (Zod) y backend (ActiveRecord)
+- **Borrado suave** — Productos eliminados con `discard` (campo `discarded_at`)
 - **Log de auditoría** — Cada cambio queda registrado mediante el gem `audited`
 - **Notificaciones Toast** — Feedback inmediato en cada acción
 - **Responsive** — Layouts para móvil, tablet y escritorio
+- **Docker Compose** — Entorno completo con un solo `docker compose up`
 
 ---
 
@@ -101,13 +103,14 @@ Abre [http://localhost:5173](http://localhost:5173) en el navegador. El servidor
 
 ## Endpoints de la API
 
-| Método | Ruta                   | Descripción                               |
-|--------|------------------------|-------------------------------------------|
-| GET    | /api/v1/products       | Listar productos (paginado, búsqueda, filtro) |
-| GET    | /api/v1/products/:id   | Obtener un producto                       |
-| POST   | /api/v1/products       | Crear producto                            |
-| PUT    | /api/v1/products/:id   | Actualizar producto                       |
-| DELETE | /api/v1/products/:id   | Eliminar producto                         |
+| Método | Ruta                          | Descripción                               |
+|--------|-------------------------------|-------------------------------------------|
+| GET    | /api/v1/products              | Listar productos (paginado, búsqueda, filtro) |
+| GET    | /api/v1/products/:id          | Obtener un producto                       |
+| POST   | /api/v1/products              | Crear producto                            |
+| PUT    | /api/v1/products/:id          | Actualizar producto                       |
+| DELETE | /api/v1/products/:id          | Eliminar producto (borrado suave)         |
+| GET    | /api/v1/products/:id/audits   | Historial de cambios del producto         |
 
 ### Parámetros de consulta (GET /api/v1/products)
 
@@ -174,19 +177,40 @@ FRONTEND_URL=http://localhost:5173
 
 ### Frontend (`frontend/.env`)
 ```
-VITE_API_BASE_URL=http://localhost:3000
+# En desarrollo local no es necesario definirla.
+# Vite redirige /api automáticamente al backend.
+# VITE_API_URL=   # dejar vacío o no crear el archivo
 ```
+
+---
+
+## Despliegue (Render.com)
+
+El proyecto incluye un [`render.yaml`](render.yaml) que configura automáticamente toda la infraestructura:
+
+| Servicio | Plan | Descripción |
+|---|---|---|
+| PostgreSQL | Free | Base de datos |
+| Web Service (Docker) | Free | Backend Rails API |
+| Static Site | Free | Frontend React |
+
+### Variables a configurar manualmente en el dashboard de Render
+
+| Servicio | Variable | Valor |
+|---|---|---|
+| Backend | `FRONTEND_URL` | `https://product-management-frontend.onrender.com` |
+| Frontend | `VITE_API_URL` | `https://product-management-api.onrender.com` |
+
+> `SECRET_KEY_BASE` y `DATABASE_URL` los genera Render automáticamente.
 
 ---
 
 ## Mejoras con Más Tiempo
 
 - **Autenticación** (Devise + JWT) para proteger la API
-- **Borrado suave** con los gems `paranoia` o `discard`
 - **Operaciones en lote** — seleccionar y eliminar múltiples productos
 - **Carga de imágenes** con Active Storage + proveedor cloud
 - **Documentación API** con Swagger/OpenAPI
-- **Docker Compose** para levantar el entorno con un solo comando
 - **CI/CD** con GitHub Actions
 - **Tests de frontend** con Vitest + React Testing Library
 - **Scroll infinito** como modo alternativo de paginación
