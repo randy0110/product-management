@@ -172,7 +172,7 @@ RSpec.describe 'Api::V1::Products', type: :request do
     it 'destroys the product and returns 200' do
       expect do
         delete "/api/v1/products/#{product.id}", headers: headers
-      end.to change(Product, :count).by(-1)
+      end.to change(Product.kept, :count).by(-1)
       expect(response).to have_http_status(:ok)
     end
 

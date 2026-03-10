@@ -12,7 +12,7 @@ RSpec.describe Products::DestroyProduct, type: :interactor do
       end
 
       it 'elimina el producto de la base de datos' do
-        expect { result }.to change(Product, :count).by(-1)
+        expect { result }.to change(Product.kept, :count).by(-1)
       end
 
       it 'guarda el nombre del producto en el contexto' do
